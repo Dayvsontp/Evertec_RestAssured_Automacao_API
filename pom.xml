@@ -12,6 +12,8 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Adiciona a propriedade do diretório de resultados Allure -->
+        <allure.results.directory>target/allure-results</allure.results.directory>
     </properties>
 
     <dependencies>
@@ -42,6 +44,14 @@
             <version>2.29.1</version>
         </dependency>
 
+        <!-- Adição necessária para que os listeners do Allure funcionem em alguns ambientes -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.21.2</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Groovy (necessário para RestAssured) -->
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
@@ -58,7 +68,7 @@
                 <artifactId>allure-maven</artifactId>
                 <version>2.12.0</version>
                 <configuration>
-                    <resultsDirectory>target/allure-results</resultsDirectory>
+                    <resultsDirectory>${allure.results.directory}</resultsDirectory>
                     <reportDirectory>target/allure-report</reportDirectory>
                 </configuration>
             </plugin>
@@ -78,6 +88,10 @@
                             <value>io.qameta.allure.junit4.AllureJunit4</value>
                         </property>
                     </properties>
+                    <!-- Configuração adicional para o aspectjweaver, se necessário -->
+                    <argLine>
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/1.9.21.2/aspectjweaver-1.9.21.2.jar"
+                    </argLine>
                 </configuration>
             </plugin>
         </plugins>

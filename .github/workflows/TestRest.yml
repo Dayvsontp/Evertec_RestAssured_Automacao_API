@@ -22,17 +22,22 @@ jobs:
       - name: Executar testes e gerar resultados Allure
         run: mvn test
 
-      # --- Gerar relatório completo do Allure ---
+      # --- Instalar Allure CLI manualmente ---
       - name: Instalar Allure CLI
         run: |
           sudo apt-get update
-          sudo apt-get install -y allure
+          sudo apt-get install -y openjdk-17-jre-headless wget unzip
+          wget https://github.com/allure-framework/allure2/releases/download/2.29.1/allure-2.29.1.zip
+          unzip allure-2.29.1.zip -d /opt/allure
+          sudo ln -s /opt/allure/allure-2.29.1/bin/allure /usr/local/bin/allure
+          allure --version
 
+      # --- Gerar relatório Allure ---
       - name: Gerar relatório Allure
         run: |
           allure generate target/allure-results -o allure-report --clean
 
-      # --- Publicar relatório como artefato do GitHub ---
+      # --- Upload do relatório Allure ---
       - name: Upload Allure Report
         uses: actions/upload-artifact@v4
         with:

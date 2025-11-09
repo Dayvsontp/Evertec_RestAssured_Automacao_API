@@ -20,7 +20,7 @@ jobs:
         run: mvn clean install -DskipTests
 
       - name: 🧪 Executar testes e gerar allure-results
-        run: mvn test io.qameta.allure:allure-maven:report
+        run: mvn clean test io.qameta.allure:allure-maven:report
 
       - name: 🗜️ Compactar resultados do Allure
         run: |

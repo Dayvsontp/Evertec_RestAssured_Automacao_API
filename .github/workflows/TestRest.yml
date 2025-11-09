@@ -17,18 +17,27 @@ jobs:
           java-version: '21'
 
       - name: 🔧 Instalar dependências (sem rodar testes)
+        # Limpa, instala dependências, mas pula a execução de testes
         run: mvn clean install -DskipTests
 
       - name: 🧪 Executar testes e gerar allure-results
-        run: mvn clean test io.qameta.allure:allure-maven:report
+        # Roda os testes, o Surefire Plugin e o Listener do Allure geram a pasta target/allure-results
+        run: mvn test
 
       - name: 🗜️ Compactar resultados do Allure
         run: |
-          echo "Conteúdo de target:"
-          ls -R target || echo "Pasta target vazia"
-          mkdir -p target/allure-results
-          zip -r allure-results.zip target/allure-results || echo "Sem resultados"
-          echo "✅ Arquivo allure-results.zip criado com sucesso"
+          echo "Conteúdo de target/allure-results antes de zipar:"
+          # Lista o conteúdo da pasta onde os resultados deveriam estar
+          ls -l target/allure-results || echo "Pasta allure-results não encontrada ou vazia"
+
+          # Cria o zip apenas se a pasta de resultados existir e tiver conteúdo
+          if [ "$(ls -A target/allure-results)" ]; then
+            zip -r allure-results.zip target/allure-results
+            echo "✅ Arquivo allure-results.zip criado com sucesso e contém dados."
+          else
+            echo "❌ Pasta target/allure-results estava vazia. Criando zip vazio para o upload."
+            touch allure-results.zip
+          fi
 
       - name: 📤 Fazer upload do artefato
         if: always()

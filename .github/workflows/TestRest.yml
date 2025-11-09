@@ -1,45 +1,35 @@
-name: Run RestAssured API Tests
+name: Run RestAssured Tests
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-  workflow_dispatch:
+on: [push, pull_request, workflow_dispatch]
+
 jobs:
   test:
-    name: Run API Tests with Allure
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Set up JDK 21
+      - name: Configurar Java 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
-          cache: 'maven'
 
-      - name: Install Dependencies
+      - name: Instalar dependências
         run: mvn clean install -DskipTests
 
-      - name: Run API Tests
+      - name: Executar testes com Maven
         run: mvn test
 
-      - name: Generate Allure Report
-        run: mvn allure:report
+      - name: Gerar relatório Allure
+        run: |
+          mvn io.qameta.allure:allure-maven:report
+          mkdir -p allure-results
+          cp -r target/site/allure-maven-plugin/* allure-results/
 
-      - name: Upload Allure Report as Artifact
+      - name: Upload Allure Report
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
-          path: target/site/allure-maven-plugin
-
-      - name: Publish Allure Report to GitHub Pages
-        if: github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./target/site/allure-maven-plugin
+          path: allure-results

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>br.com.teste</groupId>
-    <artifactId>restassured-Tesults</artifactId>
+    <artifactId>restassured-tesults</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>

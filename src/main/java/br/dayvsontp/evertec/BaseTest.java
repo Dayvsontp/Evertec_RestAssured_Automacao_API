@@ -12,8 +12,6 @@ public class BaseTest {
     public static void setup() {
 
         RestAssured.baseURI = APP_BASE_URL;
-
-        // CORREÇÃO: RestAssured.port espera um 'int'. Convertemos o Integer para int.
         RestAssured.port = APP_PORT;
 
         RestAssured.basePath = APP_BASE_PATH;

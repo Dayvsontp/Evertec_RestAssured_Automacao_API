@@ -1,35 +1,43 @@
-name: Execução de Testes com Tesults
+name: RestAssured Tesults
 
 on:
-  push:
-    branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
   workflow_dispatch:
 
 jobs:
-  test_and_upload:
+  run-restassured-tests:
     runs-on: ubuntu-latest
-    
-    # 🚨 REQUISITO DE SEGURANÇA: Define as permissões para o token GH_TOKEN
-    permissions:
-      contents: read # Permissão de leitura do código
 
     steps:
-    - uses: actions/checkout@v4 # 1. Faz o checkout do código
+      - name: 📦 Checkout código
+        uses: actions/checkout@v4
 
-    # 2. Configura a versão do Java (Use a versão do seu pom.xml, ex: 17 ou 21)
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21' 
-        distribution: 'temurin'
-        cache: 'maven' # Cache de dependências
+      - name: ☕ Configurar Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
 
-    # 3. Executar Testes e Enviar para Tesults
-    - name: Rodar Testes e Fazer Upload para Tesults
-      run: mvn clean test -DtesultsTarget=${{ secrets.TESULTS_TOKEN }}
-      
-      # Explicação:
-      # -DtesultsTarget: Sobrescreve a propriedade <tesultsTarget> no seu pom.xml.
-      # ${{ secrets.TESULTS_TOKEN }}: Puxa o token seguro que você deve configurar no GitHub.
+      - name: 🔧 Instalar dependências (sem rodar testes)
+        run: mvn clean install -DskipTests
+
+      - name: 🧪 Rodar testes JUnit (RestAssured)
+        run: mvn test
+
+      # 👇 Só roda se quiser enviar os resultados pro Tesults
+      - name: 📤 Upload para Tesults
+        if: always()
+        env:
+          TESULTS_TOKEN: ${{ secrets.TESULTS_TOKEN }}
+        run: |
+          echo "📡 Enviando resultados para Tesults..."
+          curl -X POST \
+               -H "Content-Type: application/json" \
+               -d "{\"target\": {\"token\": \"${TESULTS_TOKEN}\"}}" \
+               https://www.tesults.com/results/api
+
+      - name: 📤 Upload de relatórios JUnit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: target/surefire-reports

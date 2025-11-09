@@ -6,7 +6,6 @@ on:
 jobs:
   run-restassured-tests:
     runs-on: ubuntu-latest
-
     steps:
       - name: 📦 Checkout código
         uses: actions/checkout@v4
@@ -17,25 +16,19 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      # Opcional, mas limpa o ambiente
       - name: 🔧 Instalar dependências (sem rodar testes)
         run: mvn clean install -DskipTests
 
-      - name: 🧪 Rodar testes JUnit (RestAssured)
-        run: mvn test
+      # 🧪 CRÍTICO: Roda os testes E INJETA o token para o Tesults
+      - name: 🧪 Rodar testes JUnit (Tesults Upload)
+        run: mvn test -DtesultsTarget=${{ secrets.TESULTS_TOKEN }}
+        # O listener do tesults-junit5 detecta -DtesultsTarget e faz o upload automático aqui.
 
-      # 👇 Só roda se quiser enviar os resultados pro Tesults
-      - name: 📤 Upload para Tesults
-        if: always()
-        env:
-          TESULTS_TOKEN: ${{ secrets.TESULTS_TOKEN }}
-        run: |
-          echo "📡 Enviando resultados para Tesults..."
-          curl -X POST \
-               -H "Content-Type: application/json" \
-               -d "{\"target\": {\"token\": \"${TESULTS_TOKEN}\"}}" \
-               https://www.tesults.com/results/api
-
-      - name: 📤 Upload de relatórios JUnit
+      # 📤 Etapa Antiga de CURL REMOVIDA
+      
+      # 💾 Mantido: Upload de relatórios JUnit (Surefire) como Artefato
+      - name: 💾 Upload de relatórios JUnit
         if: always()
         uses: actions/upload-artifact@v4
         with:

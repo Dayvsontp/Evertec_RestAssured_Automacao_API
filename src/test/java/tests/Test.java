@@ -8,7 +8,7 @@ import java.util.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.matchesRegex;
 
-public class DogApi extends BaseTest {
+public class Test extends BaseTest {
 
     private static String selectedBreed;
 

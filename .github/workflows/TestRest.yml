@@ -1,47 +1,30 @@
-name: Run RestAssured Tests
+name: Run API Tests with Allure (JUnit 5)
 
-on: [push, pull_request, workflow_dispatch]
+on: [push, pull_request]
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📦 Checkout código
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: ☕ Configurar Java 21
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: 🔧 Instalar dependências (sem rodar testes)
-        # Limpa, instala dependências, mas pula a execução de testes
-        run: mvn clean install -DskipTests
+      - name: Run tests
+        run: mvn clean test
 
-      - name: 🧪 Executar testes e gerar allure-results
-        # Roda os testes, o Surefire Plugin e o Listener do Allure geram a pasta target/allure-results
-        run: mvn test
+      - name: List target directory
+        run: ls -R target || true
 
-      - name: 🗜️ Compactar resultados do Allure
-        run: |
-          echo "Conteúdo de target/allure-results antes de zipar:"
-          # Lista o conteúdo da pasta onde os resultados deveriam estar
-          ls -l target/allure-results || echo "Pasta allure-results não encontrada ou vazia"
-
-          # Cria o zip apenas se a pasta de resultados existir e tiver conteúdo
-          if [ "$(ls -A target/allure-results)" ]; then
-            zip -r allure-results.zip target/allure-results
-            echo "✅ Arquivo allure-results.zip criado com sucesso e contém dados."
-          else
-            echo "❌ Pasta target/allure-results estava vazia. Criando zip vazio para o upload."
-            touch allure-results.zip
-          fi
-
-      - name: 📤 Fazer upload do artefato
-        if: always()
+      - name: Upload Allure results
         uses: actions/upload-artifact@v4
         with:
           name: allure-results
-          path: allure-results.zip
+          path: target/allure-results
+          if-no-files-found: warn

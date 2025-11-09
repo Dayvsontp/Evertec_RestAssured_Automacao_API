@@ -58,6 +58,9 @@
                         <!--suppress UnresolvedMavenProperty -->
                         <tesultsTarget>${tesults.token.ci}</tesultsTarget>
                     </systemPropertyVariables>
+                   <includes>
+                        <include>**/tests/**/*.java</include>
+                  </includes>      
                 </configuration>
             </plugin>
         </plugins>

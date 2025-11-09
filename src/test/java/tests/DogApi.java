@@ -2,7 +2,7 @@ package tests;
 
 import br.dayvsontp.evertec.BaseTest;
 import io.restassured.RestAssured;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import java.util.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.matchesRegex;

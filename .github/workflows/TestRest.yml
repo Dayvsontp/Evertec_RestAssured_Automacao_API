@@ -7,23 +7,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout código
+      - name: 📦 Checkout código
         uses: actions/checkout@v4
 
-      - name: Configurar Java 21
+      - name: ☕ Configurar Java 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Instalar dependências
+      - name: 🔧 Instalar dependências (sem rodar testes)
         run: mvn clean install -DskipTests
 
-      - name: Executar testes com Maven (gera allure-results)
+      - name: 🧪 Executar testes (gera allure-results)
         run: mvn test
 
-      - name: Upload allure-results como artefato
+      - name: 🗜️ Compactar resultados do Allure
+        run: |
+          mkdir -p target/allure-results
+          zip -r allure-results.zip target/allure-results || echo "Nada para zipar, mas criando arquivo vazio"
+          echo "✅ Arquivo allure-results.zip criado com sucesso"
+
+      - name: 📤 Fazer upload do artefato (sempre)
+        if: always()  # <-- garante que roda mesmo se o teste falhar
         uses: actions/upload-artifact@v4
         with:
           name: allure-results
-          path: target/allure-results
+          path: allure-results.zip

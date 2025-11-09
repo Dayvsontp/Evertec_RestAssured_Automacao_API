@@ -9,11 +9,12 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-
+        <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- Adiciona a propriedade do diretório de resultados Allure -->
         <allure.results.directory>target/allure-results</allure.results.directory>
+        <!-- Define a versão do aspectjweaver em uma propriedade -->
+        <aspectj.version>1.9.22.1</aspectj.version>
     </properties>
 
     <dependencies>
@@ -44,11 +45,11 @@
             <version>2.29.1</version>
         </dependency>
 
-        <!-- Adição necessária para que os listeners do Allure funcionem em alguns ambientes -->
+        <!-- Adição necessária para que os listeners do Allure funcionem corretamente -->
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-            <version>1.9.21.2</version>
+            <version>${aspectj.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -88,9 +89,9 @@
                             <value>io.qameta.allure.junit4.AllureJunit4</value>
                         </property>
                     </properties>
-                    <!-- Configuração adicional para o aspectjweaver, se necessário -->
+                    <!-- Adiciona a linha de argumento para carregar o aspectjweaver durante a execução dos testes -->
                     <argLine>
-                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/1.9.21.2/aspectjweaver-1.9.21.2.jar"
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
                 </configuration>
             </plugin>

@@ -19,17 +19,19 @@ jobs:
       - name: 🔧 Instalar dependências (sem rodar testes)
         run: mvn clean install -DskipTests
 
-      - name: 🧪 Executar testes (gera allure-results)
-        run: mvn test
+      - name: 🧪 Executar testes e gerar allure-results
+        run: mvn test io.qameta.allure:allure-maven:report
 
       - name: 🗜️ Compactar resultados do Allure
         run: |
+          echo "Conteúdo de target:"
+          ls -R target || echo "Pasta target vazia"
           mkdir -p target/allure-results
-          zip -r allure-results.zip target/allure-results || echo "Nada para zipar, mas criando arquivo vazio"
+          zip -r allure-results.zip target/allure-results || echo "Sem resultados"
           echo "✅ Arquivo allure-results.zip criado com sucesso"
 
-      - name: 📤 Fazer upload do artefato (sempre)
-        if: always()  # <-- garante que roda mesmo se o teste falhar
+      - name: 📤 Fazer upload do artefato
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-results

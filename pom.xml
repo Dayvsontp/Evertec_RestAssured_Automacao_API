@@ -1,100 +1,71 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>Desafio_Evertec</artifactId>
-    <version>1.0-SNAPSHOT</version>
+  <groupId>br.com.teste</groupId>
+  <artifactId>restassured-allure-demo</artifactId>
+  <version>1.0-SNAPSHOT</version>
 
-    <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <allure.results.directory>target/allure-results</allure.results.directory>
-        <!-- Define a versão do aspectjweaver em uma propriedade -->
-        <aspectj.version>1.9.22.1</aspectj.version>
-    </properties>
+  <properties>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <allure.version>2.19.1</allure.version>
+  </properties>
 
-    <dependencies>
-        <!-- RestAssured -->
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>5.5.0</version>
-        </dependency>
+  <dependencies>
+    <!-- RestAssured -->
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>5.5.0</version>
+      <scope>test</scope>
+    </dependency>
 
-        <!-- JUnit 4 -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-        </dependency>
+    <!-- JUnit 5 -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.2</version>
+      <scope>test</scope>
+    </dependency>
 
-        <!-- Allure para JUnit 4 -->
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-junit4</artifactId>
-            <version>2.29.1</version>
-        </dependency>
+    <!-- Allure JUnit5 -->
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-junit5</artifactId>
+      <version>${allure.version}</version>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-java-commons</artifactId>
-            <version>2.29.1</version>
-        </dependency>
+    <!-- Allure RestAssured -->
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-rest-assured</artifactId>
+      <version>${allure.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
-        <!-- Adição necessária para que os listeners do Allure funcionem corretamente -->
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-            <version>${aspectj.version}</version>
-            <scope>test</scope>
-        </dependency>
+  <build>
+    <plugins>
+      <!-- Surefire para JUnit 5 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+        <configuration>
+          <useModulePath>false</useModulePath>
+        </configuration>
+      </plugin>
 
-        <!-- Groovy (necessário para RestAssured) -->
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy</artifactId>
-            <version>3.0.18</version>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <!-- Plugin Allure -->
-            <plugin>
-                <groupId>io.qameta.allure</groupId>
-                <artifactId>allure-maven</artifactId>
-                <version>2.12.0</version>
-                <configuration>
-                    <resultsDirectory>${allure.results.directory}</resultsDirectory>
-                    <reportDirectory>target/allure-report</reportDirectory>
-                </configuration>
-            </plugin>
-
-            <!-- Plugin Surefire: roda testes e adiciona listener do Allure -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
-                <configuration>
-                    <includes>
-                        <include>**/tests/**/*.java</include>
-                    </includes>
-                    <properties>
-                        <property>
-                            <name>listener</name>
-                            <value>io.qameta.allure.junit4.AllureJunit4</value>
-                        </property>
-                    </properties>
-                    <!-- Adiciona a linha de argumento para carregar o aspectjweaver durante a execução dos testes -->
-                    <argLine>
-                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
-                    </argLine>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+      <!-- Allure Plugin -->
+      <plugin>
+        <groupId>io.qameta.allure</groupId>
+        <artifactId>allure-maven</artifactId>
+        <version>2.11.2</version>
+      </plugin>
+    </plugins>
+  </build>
 </project>

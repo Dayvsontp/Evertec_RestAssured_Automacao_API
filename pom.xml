@@ -10,8 +10,6 @@
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <allure.version>2.29.1</allure.version>
-        <maven.surefire.version>3.2.5</maven.surefire.version>
     </properties>
 
     <dependencies>
@@ -26,6 +24,14 @@
             <artifactId>junit-jupiter</artifactId>
             <version>5.10.2</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.tesults/tesults -->
+        <dependency>
+            <groupId>com.tesults</groupId>
+            <artifactId>tesults</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+
         <dependency>
             <groupId>com.tesults.junit5</groupId>
             <artifactId>tesults-junit5</artifactId>
@@ -43,6 +49,9 @@
                     <properties>
                         <configurationParameters>
                             junit.jupiter.extensions.autodetection.enabled = true
+                        </configurationParameters>
+                        <configurationParameters>
+                            junit.platform.listeners.custom.classname=utils.TesultsListener
                         </configurationParameters>
                     </properties>
                     <systemPropertyVariables>

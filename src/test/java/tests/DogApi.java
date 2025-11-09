@@ -2,6 +2,7 @@ package tests;
 
 import br.dayvsontp.evertec.BaseTest;
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import java.util.*;
 import static org.hamcrest.Matchers.equalTo;
@@ -12,6 +13,7 @@ public class DogApi extends BaseTest {
     private static String selectedBreed;
 
     @Test
+    @Order(1)
     public void listarBreeds (){
         Map<String, ?> breedsMap = RestAssured.given()
                 .when()
@@ -40,6 +42,7 @@ public class DogApi extends BaseTest {
     }
 
     @Test
+    @Order(2)
     public void buscarImagemDaRaca() {
         if (selectedBreed != null) {
             RestAssured.given()
@@ -54,6 +57,7 @@ public class DogApi extends BaseTest {
     }
 
     @Test
+    @Order(3)
     public void buscarImagemRandom() {
 
             RestAssured.given()
@@ -70,6 +74,7 @@ public class DogApi extends BaseTest {
     }
 
     @Test
+    @Order(4)
     public void buscarNoEndPointIncorreto() {
         RestAssured.given()
                 .when()

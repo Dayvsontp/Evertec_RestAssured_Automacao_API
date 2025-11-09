@@ -1,55 +1,35 @@
-name: Run API Tests with Allure (JUnit 5)
+name: Execução de Testes com Tesults
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
 
 jobs:
-  autotests:
-    name: Rodar Testes e Compactar Allure
-    # Usando uma versão mais moderna do Ubuntu para Java 21
-    runs-on: ubuntu-latest 
+  test_and_upload:
+    runs-on: ubuntu-latest
+    
+    # 🚨 REQUISITO DE SEGURANÇA: Define as permissões para o token GH_TOKEN
+    permissions:
+      contents: read # Permissão de leitura do código
 
     steps:
-    - uses: actions/checkout@v4 # Usando a versão mais recente
+    - uses: actions/checkout@v4 # 1. Faz o checkout do código
 
-    # 1. Configurar Cache do Maven (Usando sintaxe moderna)
-    - name: Configurar Cache de Dependências (M2)
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-
-    
-    # 2. Configurar Java (Usando versão compatível com seu pom.xml: JDK 21)
-    - name: Configurar JDK 21
+    # 2. Configura a versão do Java (Use a versão do seu pom.xml, ex: 17 ou 21)
+    - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
+        java-version: '21' 
         distribution: 'temurin'
+        cache: 'maven' # Cache de dependências
 
-    # 3. Instalar Allure CLI (Obrigatório para gerar o ZIP)
-    - name: Instalar Allure CLI
-      run: |
-        npm install -g allure-commandline
-
-    # 4. Executar Testes (Gera arquivos brutos em target/allure-results)
-    - name: Executar Testes com Maven
-      # Usando 'mvn clean verify' para garantir que os testes sejam rodados (verify inclui a fase test)
-      run: mvn clean verify -Dmaven.compiler.parameters=true
-      continue-on-error: true # Continua para gerar o relatório mesmo se os testes falharem
-
-    # 5. Gerar e Compactar o Relatório Final (.zip)
-    - name: Gerar e Compactar Relatório Allure
-      # Usa os resultados brutos de target/allure-results para gerar o HTML
-      run: |
-        allure generate --clean target/allure-results -o allure-report
-        zip -r allure-report.zip allure-report/
-      if: always() # Garante a execução mesmo após falha nos testes
+    # 3. Executar Testes e Enviar para Tesults
+    - name: Rodar Testes e Fazer Upload para Tesults
+      run: mvn clean test -DtesultsTarget=${{ secrets.TESULTS_TOKEN }}
       
-    # 6. Publicar o Arquivo .zip como Artefato
-    - name: Publicar Artefato (allure-report.zip)
-      uses: actions/upload-artifact@v4
-      with:
-        name: allure-html-report
-        path: allure-report.zip # Publica o arquivo ZIP final
-        retention-days: 7
+      # Explicação:
+      # -DtesultsTarget: Sobrescreve a propriedade <tesultsTarget> no seu pom.xml.
+      # ${{ secrets.TESULTS_TOKEN }}: Puxa o token seguro que você deve configurar no GitHub.

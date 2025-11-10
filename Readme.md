@@ -22,7 +22,11 @@ biuldar as dependencias do arquivo pom.xml
 
 2. Executar testes em Headless no Github Actions
 ```
-Existe um gatilho "workflow_dispatch:" que podemos disparar o job a qualquer momento no projeto
+Existe um gatilho "workflow_dispatch:" que podemos disparar o job a qualquer momento no projeto.
+Clique em Action no menu de cima deste projeto
+Selecione RestAssured tesults.
+Escolhe a branch "master"
+Depois valida a execução e relatorios.
 ```
 
 3. Executar o relatório dos testes
@@ -32,3 +36,4 @@ Foi gerado um token na plataforma Tesults que foi utilizado neste desafio, o Tes
 ```
 
 <hr>
+

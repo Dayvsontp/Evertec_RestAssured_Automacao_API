@@ -6,6 +6,7 @@ Repositório do projeto de testes automatizados de API site dog Api "https://dog
 
 ## 💻 Tecnologias e Requisitos
 - InteliJ Idea
+- Windows/Linux
 - Maven
 - JDK 21
 - RestAssured
@@ -36,4 +37,5 @@ Foi gerado um token na plataforma Tesults que foi utilizado neste desafio, o Tes
 ```
 
 <hr>
+
 

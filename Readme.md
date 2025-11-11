@@ -35,7 +35,16 @@ Depois valida a execução e relatorios.
 Foi gerado um token na plataforma Tesults que foi utilizado neste desafio, o Tesults é uma plataforma paga, mas podemos usar a versão free por um periodo de tempo, então, foi parametrizado no codigo no arquivo pom.xml e no arquivo TestRest.yml e no secret do github Actions para ser enviado os testes para plataforma
 
 ```
+4. Executar local. Certifique-se de estar no diretório do projeto (onde está o pom.xml).
+```
+mvn test
+```
+5. Se quiser rodar uma classe específica:
+```
+mvn -Dtest=NomeDaClasseDeTeste test
+```
 
 <hr>
+
 
 
